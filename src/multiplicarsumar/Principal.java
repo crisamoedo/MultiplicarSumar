@@ -10,8 +10,11 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -24,18 +27,20 @@ import javax.swing.JTextField;
  *
  * @author a21cristinaaf
  */
-public class Principal extends JFrame implements ActionListener {
+public class Principal extends JFrame implements ActionListener, ItemListener {
 
     JLabel multiplicar;
     JComboBox<Integer> listaNum;
-    JButton[] numeros = new JButton[10];
-    JButton[] igual = new JButton[10];
-    JButton[] resultado = new JButton[10];
-    JLabel num1;
-    JLabel num2;
+    Boton[] numeros = new Boton[10];
+    Boton[] igual = new Boton[10];
+    Boton[] resultado = new Boton[10];
+    JLabel numero1;
+    JLabel numero2;
     JLabel resultadoSuma;
-    JTextField introducirNumero;
-    JButton sumar;
+    JTextField introducir1;
+    JTextField introducir2;
+    JTextField introducirResultado;
+    Boton sumar;
 
     public Principal() {
 
@@ -55,13 +60,12 @@ public class Principal extends JFrame implements ActionListener {
 
         panel1.setLayout(new GridLayout(2, 1));
         this.add(panel1, BorderLayout.NORTH);
-        System.out.println(numeros.length);
 
         //bucle para crear los botones
         for (int i = 0; i < 10; i++) {
-            numeros[i] = new JButton(String.valueOf(i));
-            igual[i] = new JButton("=");
-            resultado[i] = new JButton(" ");
+            numeros[i] = new Boton(String.valueOf(i));
+            igual[i] = new Boton("=");
+            resultado[i] = new Boton(" ");
         }
 
         JPanel panelCentral = new JPanel();
@@ -76,8 +80,8 @@ public class Principal extends JFrame implements ActionListener {
             constraints.gridheight = 1;
             constraints.weightx = 1.0;
             constraints.weighty = 1.0;
+            constraints.insets = new Insets(0, 10, 10, 5);
             constraints.fill = GridBagConstraints.BOTH;
-            
 
             panelCentral.add(numeros[i], constraints);
 
@@ -103,6 +107,88 @@ public class Principal extends JFrame implements ActionListener {
 
         this.add(panelCentral);
 
+        numero1 = new JLabel("Numero1: ");
+        numero2 = new JLabel("Numero2: ");
+        resultadoSuma = new JLabel("Resultado");
+        sumar = new Boton("SUMAR");
+        introducir1 = new JTextField();
+        introducir2 = new JTextField();
+        introducirResultado = new JTextField();
+
+        JPanel panelInferior = new JPanel();
+        panelInferior.setLayout(new GridBagLayout());
+        GridBagConstraints constraints2 = new GridBagConstraints();
+
+        constraints2.gridx = 0;
+        constraints2.gridy = 0;
+        constraints2.gridwidth = 1;
+        constraints2.gridheight = 1;
+        constraints2.weightx = 1.0;
+        constraints2.weighty = 1.0;
+        constraints2.fill = GridBagConstraints.HORIZONTAL;
+        constraints2.insets = new Insets(0, 10, 10, 0);
+        panelInferior.add(numero1, constraints2);
+
+        constraints2.gridx = 0;
+        constraints2.gridy = 1;
+        constraints2.gridwidth = 1;
+        constraints2.gridheight = 1;
+        constraints2.weightx = 1.0;
+        constraints2.weighty = 1.0;
+        constraints2.fill = GridBagConstraints.HORIZONTAL;
+        constraints2.insets = new Insets(0, 10, 10, 0);
+        panelInferior.add(numero2, constraints2);
+
+        constraints2.gridx = 0;
+        constraints2.gridy = 2;
+        constraints2.gridwidth = 1;
+        constraints2.gridheight = 1;
+        constraints2.weightx = 1.0;
+        constraints2.weighty = 1.0;
+        constraints2.fill = GridBagConstraints.HORIZONTAL;
+        constraints2.insets = new Insets(0, 10, 10, 0);
+        panelInferior.add(resultadoSuma, constraints2);
+
+        constraints2.gridx = 1;
+        constraints2.gridy = 0;
+        constraints2.gridwidth = 1;
+        constraints2.gridheight = 1;
+        constraints2.weightx = 4.0;
+        constraints2.weighty = 1.0;
+        constraints2.fill = GridBagConstraints.HORIZONTAL;
+        panelInferior.add(introducir1, constraints2);
+
+        constraints2.gridx = 1;
+        constraints2.gridy = 1;
+        constraints2.gridwidth = 1;
+        constraints2.gridheight = 1;
+        constraints2.weightx = 4.0;
+        constraints2.weighty = 1.0;
+        constraints2.fill = GridBagConstraints.HORIZONTAL;
+        panelInferior.add(introducir2, constraints2);
+
+        constraints2.gridx = 1;
+        constraints2.gridy = 2;
+        constraints2.gridwidth = 1;
+        constraints2.gridheight = 1;
+        constraints2.weightx = 4.0;
+        constraints2.weighty = 1.0;
+        constraints2.fill = GridBagConstraints.HORIZONTAL;
+        panelInferior.add(introducirResultado, constraints2);
+
+        constraints2.gridx = 2;
+        constraints2.gridy = 0;
+        constraints2.gridwidth = 4;
+        constraints2.gridheight = 4;
+        constraints2.insets = new Insets(0, 10, 10, 5);
+        constraints2.fill = GridBagConstraints.BOTH;
+        panelInferior.add(sumar, constraints2);
+
+        this.add(panelInferior, BorderLayout.SOUTH);
+
+        listaNum.addItemListener(this);
+        sumar.addActionListener(this);
+
     }
 
     /**
@@ -119,8 +205,36 @@ public class Principal extends JFrame implements ActionListener {
     }
 
     @Override
+
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        try {
+            int num1 = Integer.parseInt(introducir1.getText());
+
+            int num2 = Integer.parseInt(introducir2.getText());
+
+            Matematica numero = new Matematica(num1);
+            int resultadoSuma = numero.sumar(num2);
+            introducirResultado.setText(String.valueOf(resultadoSuma));
+
+        } catch (NumberFormatException number) {
+
+            number.getMessage();
+            System.out.println("Hay que introducir 2 números para poder sumar");
+            
+        }
+
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        listaNum.addItemListener(this);
+        int valor = listaNum.getSelectedIndex();
+        Matematica numero = new Matematica(valor);
+
+        for (int i = 0; i < resultado.length; i++) {
+            resultado[i].setText(String.valueOf(numero.multiplicar(i)));
+
+        }
     }
 
 }

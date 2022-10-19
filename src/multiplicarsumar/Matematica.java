@@ -33,16 +33,18 @@ public class Matematica {
         return "Matematica{" + "num=" + num + '}';
     }
     
-    public void sumar(int num1, int num2){
-        int resultado= num1+num2;
+    public int sumar(int num1){
+        return (this.num+num1);
         
     }
     
-    public void multiplicar(int multiplicacion){
-        for (int i = 0; i < 10; i++) {
-            multiplicacion= multiplicacion*i;
+    public int multiplicar(int num1){
+      
+         return (this.num*num1);   
+        }
+     
         }
         
-    }
     
-}
+    
+
